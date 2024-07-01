@@ -6,12 +6,12 @@ import {useNavigate} from "react-router-dom"
 import Swal from "sweetalert2";
 const PlaceOrders = () => {
     const Navigate=useNavigate();
-    const {getTotalCartAmount,token,food_list,cartItems,url}=useContext(StoreContext)
+    const {getTotalCartAmount,token,food_list,cartItems,url,setCartItems}=useContext(StoreContext)
     useEffect(()=>{
       if(!token){
         Swal.fire({
           icon: 'error',
-          title: 'Oops...',
+          title: 'Oops.....',
           text: 'Please login first',
         })
         Navigate('/cart');
@@ -42,7 +42,6 @@ const PlaceOrders = () => {
       let orderItems=[];
       
       food_list.map((item)=>{
-        
         if(cartItems[item._id]>0){
           let itemInfo = item;
           itemInfo["quantity"]=cartItems[item._id];
@@ -78,6 +77,8 @@ const PlaceOrders = () => {
             icon: "success",
           });
           Navigate("/myorder")
+          const responsed=await axios.post(url+"/api/cart/get",{},{headers:{token}})
+          setCartItems(responsed.data.cartData);
         },
    
 
@@ -165,9 +166,8 @@ const cashondelivery=async()=>{
           });
           Navigate("/myorder")
         }
-        
-
-
+          const responsed=await axios.post(url+"/api/cart/get",{},{headers:{token}})
+          setCartItems(responsed.data.cartData);
       }
   
 }
@@ -197,7 +197,7 @@ const cashondelivery=async()=>{
           <h2>Cart Total</h2>
           <div>
             <div className='cart-total-details'>
-              <p>Subtotal</p>
+              <p>SubTotal</p>
               <p>₹{getTotalCartAmount()}</p>
             </div>
             <hr/>
@@ -212,7 +212,14 @@ const cashondelivery=async()=>{
             </div>
           </div>
           <div className='payment-buttons flex justify-between'>
-               <button className='btn-1 hover:bg-orange-400' type="submit">ONLINE PAYMENT</button>
+               <button className='btn-1 hover:bg-orange-400' type="button"
+               onMouseOver={(e) => {
+    e.target.setAttribute('data-tooltip', 'Currently unavailable');
+  }}
+  onMouseOut={(e) => {
+    e.target.removeAttribute('data-tooltip');
+  }}
+  >ONLINE PAYMENT</button>
                <button className='btn-2' type="button" onClick={cashondelivery}>CASH ON DELIVERY</button>    
           </div>
           

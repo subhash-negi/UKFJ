@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom'
 const Cart = () => {
   const navigate=useNavigate();
   const {cartItems,food_list,RemoveFromCart,getTotalCartAmount,url,token,setCartItems}=useContext(StoreContext);
-  useEffect(()=>{
-    console.log("this useeffect run");
-    const loadCartData=async(token)=>{
-      const response=await axios.post(url+"/api/cart/get",{},{headers:{token}})
-      setCartItems(response.data.cartData);
-  }
-  loadCartData(token)
-  },[])
+  // useEffect(()=>{
+  //   console.log("this useeffect run");
+  //   const loadCartData=async(token)=>{
+  //     const response=await axios.post(url+"/api/cart/get",{},{headers:{token}})
+  //     setCartItems(response.data.cartData);
+  // }
+  // loadCartData(token)
+  // },[])
   return (
     <div className='cart'>
       <div className='cart-items'>
